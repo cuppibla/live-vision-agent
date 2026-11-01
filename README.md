@@ -1,5 +1,7 @@
 # Eyes · EP6 — Give your AI agent eyes
 
+![look](docs/look.png)
+
 A minimal **ADK + Gemini Live** demo: one live session that hears your voice
 *and* sees your camera.
 
@@ -36,6 +38,34 @@ Open <http://localhost:8000>, tap the mic, hold something up and ask
 > Camera and mic need a secure context. `localhost` is fine. To demo from a
 > phone, tunnel with `ngrok http 8000` (or similar) and open the https URL.
 
+## Model
+
+Default is `gemini-3.8-live` (set `LIVE_MODEL` in `.env`). To see which live
+models your key can use:
+
+```bash
+python -c "from google import genai; [print(m.name) for m in genai.Client().models.list() if 'bidiGenerateContent' in (m.supported_actions or [])]"
+```
+
+## End-to-end test without a real camera
+
+`tests/` drives the real app with a **moving** fake camera (a 20 s clip:
+apple → sliding banana → rising hand → STOP sign) and a fake mic that
+*speaks* "What is this? Please read any text you see."
+
+```bash
+python tests/make_fixtures.py     # needs ffmpeg + GOOGLE_API_KEY (Gemini TTS)
+python main.py &
+node tests/e2e.js                 # needs playwright + chromium
+```
+
+Verified run: snapshot during the apple scene → *"This is a graphic of a red
+apple. The text at the top reads 'HELLO EP6'."* Watch mode at 1 fps with the
+watcher set to *a raised hand* → watcher fires during the hand scene and the
+talking agent mentions it.
+
+![watch](docs/watch.png)
+
 ## Files
 
 ```
@@ -45,6 +75,7 @@ vision_agent/watcher.py  advanced pattern: separate vision model as a watcher
 static/app.js            camera → canvas → JPEG → Blob, snapshot vs stream
 static/pcm-recorder.js   mic → 16 kHz PCM16
 static/pcm-player.js     24 kHz PCM16 → speakers
+tests/                   fake camera + fake mic end-to-end test
 ```
 
 ## The one idea

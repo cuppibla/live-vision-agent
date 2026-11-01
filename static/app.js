@@ -147,9 +147,11 @@ function send(msg) {
 
 function handle(m) {
   switch (m.type) {
-    case "audio":
-      S.player?.port.postMessage(b64ToBuf(m.data));
+    case "audio": {
+      const buf = b64ToBuf(m.data); S.audioBytes = (S.audioBytes || 0) + buf.byteLength;
+      S.player?.port.postMessage(buf);
       break;
+    }
     case "transcript":
       if (m.role === "user") {
         S.youText = m.final ? m.text : S.youText + m.text;
@@ -245,3 +247,4 @@ function b64ToBuf(s) {
 }
 
 startCamera();
+window.EYES = S; // exposed for tests

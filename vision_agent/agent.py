@@ -9,7 +9,7 @@ import os
 
 from google.adk.agents import Agent
 
-LIVE_MODEL = os.environ.get("LIVE_MODEL", "gemini-live-2.5-flash-native-audio")
+LIVE_MODEL = os.environ.get("LIVE_MODEL", "gemini-3.8-live")
 
 root_agent = Agent(
     name="eyes",
