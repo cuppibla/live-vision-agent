@@ -14,6 +14,7 @@ const el = {
   pipeline: $("pipeline"), thumb: $("thumb"),
   watchTarget: $("watchTarget"), watchBadge: $("watchBadge"),
   mic: $("micBtn"), hint: $("hint"),
+  cam: $("camBtn"), camText: $("camText"), noCam: $("noCam"),
 };
 
 const S = {
@@ -25,17 +26,26 @@ const S = {
 };
 
 /* ───────────────── camera ───────────────── */
-async function startCamera() {
+let facing = "environment";
+async function startCamera(flip = false) {
+  if (flip) facing = facing === "user" ? "environment" : "user";
+  S.camStream?.getTracks().forEach((t) => t.stop());
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
+    S.camStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } },
       audio: false,
     });
-    el.video.srcObject = stream;
+    el.video.srcObject = S.camStream;
+    el.viewfinder.classList.add("has-cam");
+    el.camText.textContent = "flip";
   } catch (e) {
-    setHint("camera blocked", true);
+    el.viewfinder.classList.remove("has-cam");
+    el.camText.textContent = "camera";
+    setHint(location.protocol === "https:" || location.hostname === "localhost" ? "camera blocked — allow it in the browser" : "camera needs https or localhost", true);
   }
 }
+el.noCam.onclick = () => startCamera(false);
+el.cam.onclick = () => startCamera(S.camStream ? true : false);
 
 // One frame, end to end: video -> canvas -> JPEG bytes.
 async function captureFrame() {

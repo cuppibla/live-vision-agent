@@ -139,6 +139,19 @@ input { font: inherit; color: inherit; }
 }
 .node.lit { background: var(--mint); color: #061a12; border-color: var(--mint); transform: scale(1.1); }
 .pipeline.stream .node.lit { background: var(--violet); border-color: var(--violet); color: #0e0a2a; }
+.hud-left { display: flex; gap: 10px; pointer-events: auto; }
+.pill.cam { cursor: pointer; color: var(--text); gap: 6px; }
+.pill.cam svg { width: 16px; height: 16px; }
+.pill.cam:hover { background: rgba(255,255,255,.14); }
+.nocam {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  color: var(--muted); background: #0e0e12; z-index: 1;
+}
+.nocam svg { width: 72px; height: 72px; margin-bottom: 10px; opacity: .7; }
+.nocam b { font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
+.nocam small { font-size: 14px; }
+.nocam:hover { color: var(--mint); }
+.viewfinder.has-cam .nocam { display: none; }
 .hud-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
 .thumb {
   width: 96px; height: 64px; object-fit: cover; border-radius: 10px;
