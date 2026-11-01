@@ -6,3 +6,4 @@ venv/
 .DS_Store
 tests/fixtures/
 tests/out/
+docs/e2e-demo.mp4
