@@ -1,0 +1,5 @@
+google-adk>=2.13
+google-genai>=1.30
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-dotenv>=1.0

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Eyes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<main class="app">
+
+  <!-- ───────── stage: what the agent sees ───────── -->
+  <section class="stage">
+    <div class="viewfinder" id="viewfinder" data-mode="idle">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="canvas" hidden></canvas>
+      <div class="scan"></div>
+      <div class="flash" id="flash"></div>
+
+      <div class="hud hud-top">
+        <div class="pill" id="status"><i class="dot"></i><span id="statusText">offline</span></div>
+        <div class="hud-right"><div class="pill ghost" id="stat">0 frames</div><img class="thumb" id="thumb" alt=""></div>
+      </div>
+
+      <div class="hud hud-bottom">
+        <p class="you" id="youText"></p>
+        <p class="agent" id="agentText">Hold something up.<br>Ask “what is this?”</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── panel: how frames get in ───────── -->
+  <aside class="panel">
+    <header class="brand">
+      <h1>Eyes</h1>
+      <p>one live session · voice + vision</p>
+    </header>
+
+    <div class="modes">
+      <button class="mode" id="lookBtn" title="Space">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 24s7-12 20-12 20 12 20 12-7 12-20 12S4 24 4 24z"/>
+          <circle cx="24" cy="24" r="6"/>
+        </svg>
+        <span class="big">Look</span>
+        <span class="small">one frame</span>
+      </button>
+
+      <button class="mode" id="watchBtn">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 24s6-10 16-10 16 10 16 10-6 10-16 10S8 24 8 24z"/>
+          <circle cx="24" cy="24" r="4.5"/>
+          <path d="M4 14c-2 3-3 6.5-3 10s1 7 3 10M44 14c2 3 3 6.5 3 10s-1 7-3 10"/>
+        </svg>
+        <span class="big">Watch</span>
+        <span class="small">frames / sec</span>
+        <div class="fps" id="fps">
+          <b data-fps="0.5">½</b><b data-fps="1" class="on">1</b><b data-fps="2">2</b>
+        </div>
+      </button>
+    </div>
+
+    <div class="pipeline" id="pipeline">
+      <span class="node" data-node="camera">Camera</span>
+      <span class="node" data-node="canvas">Canvas</span>
+      <span class="node" data-node="jpeg">JPEG</span>
+      <span class="node" data-node="blob">Blob</span>
+      <span class="node" data-node="model">Model</span>
+    </div>
+
+    <label class="watcher">
+      <span class="label">Watcher</span>
+      <input id="watchTarget" placeholder="watch for… a raised hand" autocomplete="off">
+      <span class="badge" id="watchBadge">off</span>
+    </label>
+
+    <footer class="controls">
+      <button class="mic" id="micBtn" aria-label="Connect">
+        <i class="ring"></i>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="3" width="6" height="11" rx="3"/>
+          <path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>
+        </svg>
+      </button>
+      <span class="hint" id="hint">tap to go live</span>
+    </footer>
+  </aside>
+
+</main>
+<script src="/static/app.js" type="module"></script>
+</body>
+</html>
