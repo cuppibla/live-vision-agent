@@ -7,3 +7,6 @@ venv/
 tests/fixtures/
 tests/out/
 docs/e2e-demo.mp4
+node_modules/
+package.json
+package-lock.json

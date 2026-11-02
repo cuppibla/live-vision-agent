@@ -35,6 +35,13 @@ python main.py
 Open <http://localhost:8000>, tap the mic, hold something up and ask
 *“what is this?”*
 
+The moment the mic hears you start talking, the app takes one snapshot on its
+own (hint reads *heard you → looked*), so “this” always means what is in
+front of the camera *as you ask* — not whatever you last pressed **Look** at.
+The thumbnail in the viewfinder is the exact JPEG the model received; it stays
+up until the answer lands so you can compare the two. **Look** is still there
+for a deliberate frame without speaking.
+
 > Camera and mic need a secure context. `localhost` is fine. To demo from a
 > phone, tunnel with `ngrok http 8000` (or similar) and open the https URL.
 

@@ -75,14 +75,41 @@ async function sendFrame(mode) {
 }
 
 /* ───────────────── modes ───────────────── */
-function look() {
+function look(why = "button") {
   if (S.streaming) return;
   el.flash.classList.remove("go"); void el.flash.offsetWidth; el.flash.classList.add("go");
   el.look.classList.add("go");
   el.viewfinder.dataset.mode = "snapshot";
   el.pipeline.classList.remove("stream");
   sendFrame("snapshot");
+  if (why === "voice" && S.live) {
+    setHint("heard you → looked");
+    clearTimeout(look.t); look.t = setTimeout(() => { if (S.live && !el.hint.classList.contains("err")) setHint("listening"); }, 1400);
+  }
   setTimeout(() => { el.look.classList.remove("go"); if (!S.streaming) el.viewfinder.dataset.mode = "idle"; }, 500);
+}
+
+/* ───────────────── voice-gated snapshot ─────────────────
+   "What is this?" only makes sense with the frame from *now*. The moment the
+   mic hears you start talking, take one snapshot (and one more if you keep
+   talking), so "this" means what is in front of the camera as you ask — not
+   whatever you last pressed Look at. Stream mode already sends frames, so
+   the gate stays out of its way. */
+const VOICE = { on: 0.07, onWhileAgentTalks: 0.18, off: 0.03, quietMs: 700, refreshMs: 1500 };
+function voiceGate(level) {
+  const now = performance.now();
+  const on = now < (S.playUntil || 0) ? VOICE.onWhileAgentTalks : VOICE.on; // speaker echo is quieter than you
+  if (level > on) {
+    S.lastLoud = now;
+    if (!S.speaking) {
+      S.speaking = true; S.lastAutoFrame = now;
+      if (!S.streaming) look("voice");
+    } else if (!S.streaming && now - S.lastAutoFrame > VOICE.refreshMs) {
+      S.lastAutoFrame = now; sendFrame("snapshot");
+    }
+  } else if (S.speaking && level < VOICE.off && now - S.lastLoud > VOICE.quietMs) {
+    S.speaking = false;
+  }
 }
 
 function setStreaming(on) {
@@ -160,6 +187,8 @@ function handle(m) {
     case "audio": {
       const buf = b64ToBuf(m.data); S.audioBytes = (S.audioBytes || 0) + buf.byteLength;
       S.player?.port.postMessage(buf);
+      // 24 kHz PCM16 = 48 bytes per ms; remember how long the speaker will be busy.
+      S.playUntil = Math.max(S.playUntil || 0, performance.now()) + buf.byteLength / 48;
       break;
     }
     case "transcript":
@@ -176,10 +205,11 @@ function handle(m) {
       break;
     case "turn_complete":
       S.agentFresh = true; S.youText = "";
+      if (!S.streaming) hideThumb();
       break;
     case "interrupted":
       S.player?.port.postMessage("clear");
-      S.agentFresh = true;
+      S.agentFresh = true; S.playUntil = 0;
       break;
     case "frame_ack":
       lit("model");
@@ -219,6 +249,7 @@ async function startAudio() {
   src.connect(rec);
   rec.port.onmessage = (e) => {
     el.mic.style.setProperty("--level", 1 + Math.min(1, e.data.level * 2) * 0.35);
+    voiceGate(e.data.level);
     send({ type: "audio", data: b64(e.data.buffer) });
   };
 }
@@ -231,9 +262,16 @@ function lit(node, delay = 0) {
     setTimeout(() => n.classList.remove("lit"), 520);
   }, delay);
 }
+// The thumbnail is the exact JPEG that went to the model. While live it stays
+// up until the answer lands (turn_complete), so you can compare what the model
+// saw with what it said.
 function showThumb(url) {
   el.thumb.src = url; el.thumb.classList.add("show");
-  clearTimeout(showThumb.t); showThumb.t = setTimeout(() => el.thumb.classList.remove("show"), 1600);
+  clearTimeout(showThumb.t);
+  if (!S.live) showThumb.t = setTimeout(() => el.thumb.classList.remove("show"), 1600);
+}
+function hideThumb(delay = 1500) {
+  clearTimeout(showThumb.t); showThumb.t = setTimeout(() => el.thumb.classList.remove("show"), delay);
 }
 function bump(bytes) { S.frames++; S.lastKB = Math.round(bytes / 1024); stat(); }
 function stat() {
