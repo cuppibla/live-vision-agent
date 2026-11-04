@@ -1,9 +1,9 @@
 # Eyes · EP6 — Give your AI agent eyes
 
-![look](docs/look.png)
-
 A minimal **ADK + Gemini Live** demo: one live session that hears your voice
 *and* sees your camera.
+
+![Architecture: browser camera and mic → FastAPI WebSocket → LiveRequestQueue → Gemini Live, with an optional watcher model](docs/architecture.png)
 
 ```
 camera → canvas → JPEG → Blob → model
@@ -70,8 +70,6 @@ Verified run: snapshot during the apple scene → *"This is a graphic of a red
 apple. The text at the top reads 'HELLO EP6'."* Watch mode at 1 fps with the
 watcher set to *a raised hand* → watcher fires during the hand scene and the
 talking agent mentions it.
-
-![watch](docs/watch.png)
 
 ## Files
 

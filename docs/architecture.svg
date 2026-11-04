@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="885" viewBox="0 0 1600 885">
+  <style>
+    text { font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; fill: #0F172A; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .title { font-size: 34px; font-weight: 700; }
+    .sub { font-size: 20px; fill: #64748B; }
+    .tag { font-size: 18px; font-weight: 600; fill: #334155; }
+    .lbl { font-size: 14px; fill: #64748B; }
+    .vlbl { font-size: 14px; font-weight: 700; fill: #7C3AED; }
+    .name { font-size: 17px; font-weight: 600; }
+    .small { font-size: 13px; fill: #64748B; }
+    .num { font-size: 14px; font-weight: 700; fill: #FFFFFF; }
+  </style>
+  <defs>
+    <linearGradient id="agent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6366F1"/><stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94A3B8"/></marker>
+    <marker id="arrV" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8B5CF6"/></marker>
+  </defs>
+  <rect width="1600" height="885" fill="#FFFFFF"/>
+
+  <text class="title" x="70" y="84">Eyes: camera frames ride the same live session as your voice</text>
+  <text class="sub" x="70" y="122">camera → canvas → JPEG → Blob → model. Mic audio goes into the same LiveRequestQueue.</text>
+
+  <!-- ───────── Browser ───────── -->
+  <rect x="70" y="170" width="495" height="540" rx="18" fill="#F8FAFC" fill-opacity="0.6" stroke="#94A3B8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text class="mono tag" x="96" y="206">static/app.js · browser</text>
+
+  <rect x="95" y="230" width="445" height="64" rx="12" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2"/>
+  <text class="mono name" x="317" y="257" text-anchor="middle" style="fill:#92400E">send a frame when…</text>
+  <text class="mono small" x="317" y="279" text-anchor="middle" style="fill:#B45309">Look · Watch ½/1/2 fps · you start talking</text>
+
+  <rect x="95" y="330" width="130" height="64" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="160" y="357" text-anchor="middle">camera</text>
+  <text class="mono small" x="160" y="378" text-anchor="middle">getUserMedia</text>
+  <rect x="252" y="330" width="130" height="64" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="317" y="357" text-anchor="middle">canvas</text>
+  <text class="mono small" x="317" y="378" text-anchor="middle">≤ 768 px</text>
+  <rect x="409" y="330" width="131" height="64" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="474" y="357" text-anchor="middle">JPEG</text>
+  <text class="mono small" x="474" y="378" text-anchor="middle">toBlob · q0.7</text>
+  <line x1="225" y1="362" x2="250" y2="362" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="382" y1="362" x2="407" y2="362" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="95" y="430" width="130" height="64" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="160" y="457" text-anchor="middle">mic</text>
+  <text class="mono small" x="160" y="478" text-anchor="middle">getUserMedia</text>
+  <rect x="252" y="430" width="288" height="64" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="396" y="457" text-anchor="middle">pcm-recorder.js</text>
+  <text class="mono small" x="396" y="478" text-anchor="middle">16 kHz PCM16 · 128 ms chunks</text>
+  <line x1="225" y1="462" x2="250" y2="462" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="95" y="600" width="130" height="64" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="160" y="637" text-anchor="middle">speaker</text>
+  <rect x="252" y="600" width="288" height="64" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="396" y="627" text-anchor="middle">pcm-player.js</text>
+  <text class="mono small" x="396" y="648" text-anchor="middle">24 kHz PCM16</text>
+  <line x1="252" y1="632" x2="227" y2="632" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ① trigger fires a capture -->
+  <line x1="160" y1="294" x2="160" y2="328" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <circle cx="196" cy="312" r="15" fill="#0F172A"/>
+  <text class="num" x="196" y="317" text-anchor="middle">1</text>
+  <!-- the voice gate: the mic level fires a snapshot -->
+  <path d="M 120 430 L 120 412 L 80 412 L 80 262 L 93 262" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arr)"/>
+
+  <!-- ───────── Server ───────── -->
+  <rect x="615" y="170" width="470" height="540" rx="18" fill="#F8FAFC" fill-opacity="0.6" stroke="#94A3B8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text class="mono tag" x="641" y="206">main.py · FastAPI :8000</text>
+
+  <rect x="640" y="230" width="150" height="450" rx="14" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono" x="715" y="440" text-anchor="middle" font-size="19" font-weight="600">WebSocket</text>
+  <text class="mono" x="715" y="466" text-anchor="middle" font-size="17">/ws</text>
+  <text class="mono small" x="715" y="494" text-anchor="middle">JSON msgs:</text>
+  <text class="mono small" x="715" y="512" text-anchor="middle">frame · audio</text>
+  <text class="mono small" x="715" y="530" text-anchor="middle">text · watch</text>
+
+  <rect x="860" y="230" width="200" height="70" rx="12" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="6 4"/>
+  <text class="mono name" x="960" y="259" text-anchor="middle">Watcher</text>
+  <text class="mono small" x="960" y="280" text-anchor="middle">drops frames if busy</text>
+
+  <rect x="860" y="340" width="200" height="80" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="960" y="373" text-anchor="middle">LiveRequestQueue</text>
+  <text class="mono small" x="960" y="396" text-anchor="middle">send_realtime(Blob)</text>
+
+  <rect x="860" y="470" width="200" height="90" rx="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+  <text class="mono name" x="960" y="506" text-anchor="middle">runner.run_live</text>
+  <text class="mono small" x="960" y="530" text-anchor="middle">ADK · BIDI stream</text>
+
+  <!-- ② browser → server -->
+  <line x1="540" y1="362" x2="638" y2="362" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <circle cx="590" cy="362" r="15" fill="#0F172A"/>
+  <text class="num" x="590" y="367" text-anchor="middle">2</text>
+  <text class="mono lbl" x="590" y="338" text-anchor="middle">frame</text>
+  <line x1="540" y1="462" x2="638" y2="462" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <text class="mono lbl" x="590" y="452" text-anchor="middle">audio</text>
+
+  <!-- ③ WS → queue -->
+  <line x1="790" y1="380" x2="858" y2="380" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <circle cx="824" cy="380" r="15" fill="#0F172A"/>
+  <text class="num" x="824" y="385" text-anchor="middle">3</text>
+  <text class="mono lbl" x="824" y="355" text-anchor="middle">Blob</text>
+
+  <!-- queue → run_live -->
+  <line x1="960" y1="420" x2="960" y2="468" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- run_live → WS (events) -->
+  <line x1="860" y1="560" x2="792" y2="560" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <text class="mono lbl" x="826" y="584" text-anchor="middle">events</text>
+
+  <!-- ⑥ WS → player -->
+  <line x1="640" y1="632" x2="542" y2="632" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <circle cx="590" cy="632" r="15" fill="#0F172A"/>
+  <text class="num" x="590" y="637" text-anchor="middle">6</text>
+  <text class="mono lbl" x="590" y="608" text-anchor="middle">reply</text>
+
+  <!-- watcher path (purple, optional) -->
+  <line x1="790" y1="265" x2="858" y2="265" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrV)"/>
+  <text class="mono vlbl" x="824" y="252" text-anchor="middle">frame</text>
+  <line x1="960" y1="300" x2="960" y2="338" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrV)"/>
+  <text class="mono vlbl" x="950" y="325" text-anchor="end">"[watcher] spotted…"</text>
+
+  <!-- ───────── Gemini ───────── -->
+  <rect x="1185" y="170" width="345" height="540" rx="18" fill="#F8FAFC" fill-opacity="0.6" stroke="#94A3B8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text class="mono tag" x="1211" y="206">Gemini API · GOOGLE_API_KEY</text>
+
+  <rect x="1205" y="230" width="300" height="70" rx="14" fill="url(#agent)"/>
+  <text class="mono" x="1355" y="260" text-anchor="middle" font-size="17" font-weight="600" style="fill:#FFFFFF">✦ gemini-2.5-flash</text>
+  <text class="mono" x="1355" y="283" text-anchor="middle" font-size="13" style="fill:#FFFFFF" opacity="0.85">WATCHER_MODEL · {seen, note}</text>
+
+  <rect x="1205" y="440" width="300" height="150" rx="14" fill="url(#agent)"/>
+  <text class="mono" x="1355" y="494" text-anchor="middle" font-size="19" font-weight="600" style="fill:#FFFFFF">✦ eyes</text>
+  <text class="mono" x="1355" y="522" text-anchor="middle" font-size="14" style="fill:#FFFFFF">gemini-3.8-live</text>
+  <text class="mono" x="1355" y="548" text-anchor="middle" font-size="13" style="fill:#FFFFFF" opacity="0.85">LIVE_MODEL · vision_agent/agent.py</text>
+  <text class="mono" x="1355" y="568" text-anchor="middle" font-size="13" style="fill:#FFFFFF" opacity="0.85">hears + sees in one session</text>
+
+  <!-- watcher ⇄ flash -->
+  <line x1="1060" y1="255" x2="1203" y2="255" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrV)"/>
+  <text class="mono vlbl" x="1132" y="244" text-anchor="middle">1 frame</text>
+  <line x1="1205" y1="285" x2="1062" y2="285" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrV)"/>
+  <text class="mono vlbl" x="1132" y="318" text-anchor="middle">{seen,note}</text>
+
+  <!-- ④ ⑤ run_live ⇄ live model -->
+  <line x1="1060" y1="500" x2="1203" y2="500" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <circle cx="1132" cy="500" r="15" fill="#0F172A"/>
+  <text class="num" x="1132" y="505" text-anchor="middle">4</text>
+  <text class="mono lbl" x="1132" y="476" text-anchor="middle">audio+JPEG</text>
+  <line x1="1205" y1="540" x2="1062" y2="540" stroke="#94A3B8" stroke-width="2" marker-end="url(#arr)"/>
+  <circle cx="1132" cy="540" r="15" fill="#0F172A"/>
+  <text class="num" x="1132" y="545" text-anchor="middle">5</text>
+  <text class="mono lbl" x="1132" y="576" text-anchor="middle">audio+text</text>
+
+  <!-- legend -->
+  <g transform="translate(70,735)">
+    <rect x="0" y="0" width="26" height="18" rx="5" fill="url(#agent)"/>
+    <text x="34" y="14" font-size="14">model call</text>
+    <rect x="150" y="0" width="26" height="18" rx="5" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2"/>
+    <text x="184" y="14" font-size="14">code</text>
+    <rect x="250" y="0" width="26" height="18" rx="5" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2"/>
+    <text x="284" y="14" font-size="14">when a frame is sent</text>
+    <line x1="450" y1="9" x2="490" y2="9" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="500" y="14" font-size="14">optional watcher path</text>
+    <line x1="680" y1="9" x2="720" y2="9" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 5"/>
+    <text x="730" y="14" font-size="14">mic level triggers a snapshot</text>
+  </g>
+
+  <!-- caveat strip -->
+  <rect x="70" y="775" width="1460" height="80" rx="14" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.5"/>
+  <text x="100" y="810" font-size="18" font-weight="700" style="fill:#92400E">Snapshot when the agent needs to look. Stream when it needs to watch.</text>
+  <text x="100" y="837" font-size="16" style="fill:#B45309">Every frame costs tokens, and too many frames make the live voice session unstable.</text>
+</svg>
